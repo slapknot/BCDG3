@@ -41,6 +41,7 @@
     .green-score-label { font-size: 12px; color: var(--light-text); margin-bottom: 4px; }
     .green-score-bar { width: 100%; background: #ddd; border-radius: 4px; overflow: hidden; height: 8px; }
     .green-score-fill { height: 8px; background: var(--primary-color); }
+    .highlight { box-shadow: 0 0 12px red; }
     #selected-name { margin-left: 12px; font-size: 14px; font-weight: bold; }
   </style>
 </head>
@@ -57,9 +58,7 @@
     <span id="selected-name"></span>
   </div>
   <div id="restaurants-list"></div>
-
   <script>
-    // Data setup (as before)...
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -78,7 +77,8 @@
     let restaurants = [
       {name:'ร้านบ้านสวนออร์แกนิก',discount:10,greenScore:92,rating:4.7,province:'ชลบุรี',district:'ศรีราชา',type:'buffet',price:450},
       {name:'ส้มตำแม่บุญช่วย',discount:15,greenScore:75,rating:4.3,province:'ขอนแก่น',district:'เมืองขอนแก่น',type:'asian',price:129},
-      {name:'SteakHouse Prime',discount:20,greenScore:60,rating:4.8,province:'กรุงเทพฯ',district:'วัฒนา',type:'western',price:1299},
+      {name:'SteakHouse Prime',discount:20,greenScore:60,rating:4.8,province:'กรุงเทพฯ'
+      ,district:'วัฒนา',type:'western',price:1299},
       {name:'ก๋วยเตี๋ยวเรือนายโอ',discount:5,greenScore:55,rating:4.2,province:'นครราชสีมา',district:'ปากช่อง',type:'asian',price:89},
       {name:'La Pizzeria Italiano',discount:25,greenScore:80,rating:4.6,province:'เชียงใหม่',district:'เมืองเชียงใหม่',type:'western',price:550},
       {name:'Buffet ซีฟู้ดเดลิเวอรี่',discount:30,greenScore:95,rating:4.9,province:'ภูเก็ต',district:'ราไวย์',type:'buffet',price:799},
@@ -89,24 +89,26 @@
     ];
 
     // Assign random image
-    restaurants.forEach(r => r.image = imageUrls[Math.floor(Math.random()*imageUrls.length)]);
+    restaurants.forEach(r => r.image = imageUrls[Math.floor(Math.random() * imageUrls.length)]);
 
-    // Bring top 20% green-score to front, randomized
-    const topCount = Math.ceil(restaurants.length*0.2);
-    const top20 = [...restaurants].sort((a,b)=>b.greenScore-a.greenScore).slice(0, topCount);
+    // Bring top 20% green score restaurants to front
+    const topCount = Math.ceil(restaurants.length * 0.2);
+    const top20 = [...restaurants].sort((a,b)=>b.greenScore - a.greenScore).slice(0, topCount);
     shuffle(top20);
     restaurants = [...top20, ...restaurants.filter(r=>!top20.includes(r))];
 
-    // Element refs
-    const listEl         = document.getElementById('restaurants-list');
-    const searchInput    = document.getElementById('search-input');
+    // DOM refs
+    const listEl = document.getElementById('restaurants-list');
+    const searchInput = document.getElementById('search-input');
     const filterProvince = document.getElementById('filter-province');
     const filterDistrict = document.getElementById('filter-district');
-    const filterType     = document.getElementById('filter-type');
-    const filterPrice    = document.getElementById('filter-price');
-    const sortOrder      = document.getElementById('sort-order');
+    const filterType = document.getElementById('filter-type');
+    const filterPrice = document.getElementById('filter-price');
+    const sortOrder = document.getElementById('sort-order');
+    const randomBtn = document.getElementById('random-btn');
+    const selectedNameEl = document.getElementById('selected-name');
 
-    // Populate province dropdown
+    // Populate provinces
     const provinces = [...new Set(restaurants.map(r=>r.province))].sort();
     provinces.forEach(p => {
       const opt = document.createElement('option');
@@ -114,15 +116,13 @@
       filterProvince.add(opt);
     });
 
-    // When province changes, populate districts
+    // Province -> District cascade
     filterProvince.addEventListener('change', () => {
       const prov = filterProvince.value;
       filterDistrict.innerHTML = `<option value="">อำเภอ/เขต</option>`;
       filterDistrict.disabled = !prov;
       if (prov) {
-        const districts = [...new Set(
-          restaurants.filter(r=>r.province===prov).map(r=>r.district)
-        )].sort();
+        const districts = [...new Set(restaurants.filter(r=>r.province===prov).map(r=>r.district))].sort();
         districts.forEach(d => {
           const opt = document.createElement('option');
           opt.value = opt.text = d;
@@ -132,17 +132,15 @@
       applyFilters();
     });
 
-    // Core filter+sort
+    // Filter and sort
     function applyFilters() {
+      selectedNameEl.textContent = '';
+      const term = searchInput.value.trim().toLowerCase();
       let data = restaurants.filter(r => {
-        // search
-        if (searchInput.value && !r.name.includes(searchInput.value)) return false;
-        // province/district
+        if (term && !r.name.toLowerCase().includes(term)) return false;
         if (filterProvince.value && r.province !== filterProvince.value) return false;
         if (filterDistrict.value && r.district !== filterDistrict.value) return false;
-        // type
         if (filterType.value && r.type !== filterType.value) return false;
-        // price range
         if (filterPrice.value) {
           const [min,max] = filterPrice.value.split('-');
           if (min && r.price < +min) return false;
@@ -150,25 +148,48 @@
         }
         return true;
       });
-
-      // sort
+      // Sort
       const order = sortOrder.value;
       if (order) {
         const [key, dir] = order.split('_');
-        data.sort((a,b) => dir === 'desc' ? b[key] - a[key] : a[key] - b[key]);
+        data.sort((a,b) => dir==='desc' ? b[key]-a[key] : a[key]-b[key]);
       }
-
       renderRestaurants(data);
     }
 
-    // Hook up controls
-    [searchInput, filterDistrict, filterType, filterPrice, sortOrder]
-      .forEach(el => el.addEventListener('input', applyFilters));
+    // Hook inputs
+    [searchInput, filterDistrict, filterType, filterPrice, sortOrder].forEach(el =>
+      el.addEventListener('input', applyFilters)
+    );
 
-    // initial render
-    renderRestaurants(restaurants);
+    // Random with running-light effect
+    randomBtn.addEventListener('click', () => {
+      const links = Array.from(listEl.children);
+      if (!links.length) return;
+      selectedNameEl.textContent = '';
+      const cards = links.map(link => link.querySelector('.restaurant-card'));
+      let current = 0;
+      let iterations = cards.length * 3 + Math.floor(Math.random() * cards.length);
+      const interval = setInterval(() => {
+        cards.forEach(c => c.classList.remove('highlight'));
+        cards[current].classList.add('highlight');
+        current = (current + 1) % cards.length;
+        iterations--;
+        if (iterations <= 0) {
+          clearInterval(interval);
+          const finalIndex = (current===0 ? cards.length - 1 : current-1);
+          cards.forEach(c => c.classList.remove('highlight'));
+          cards[finalIndex].classList.add('highlight');
+          links[finalIndex].scrollIntoView({ behavior:'smooth', block:'center' });
+          selectedNameEl.textContent = cards[finalIndex].querySelector('.restaurant-name').textContent;
+        }
+      }, 100);
+    });
 
-    // rendering function (unchanged)
+    // Initial render
+    applyFilters();
+
+    // Render function
     function renderRestaurants(data) {
       listEl.innerHTML = '';
       data.forEach(r => {
