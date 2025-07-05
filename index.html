@@ -41,7 +41,6 @@
     .green-score-label { font-size: 12px; color: var(--light-text); margin-bottom: 4px; }
     .green-score-bar { width: 100%; background: #ddd; border-radius: 4px; overflow: hidden; height: 8px; }
     .green-score-fill { height: 8px; background: var(--primary-color); }
-    .highlight { box-shadow: 0 0 12px red; }
     #selected-name { margin-left: 12px; font-size: 14px; font-weight: bold; }
   </style>
 </head>
@@ -58,8 +57,16 @@
     <span id="selected-name"></span>
   </div>
   <div id="restaurants-list"></div>
+
   <script>
-    function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }}
+    // Data setup (as before)...
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
     const imageUrls = [
       'https://cms.dmpcdn.com/food/2025/05/21/b3c2c1e0-360f-11f0-91ec-f3447caf4298_webp_original.webp',
       'https://cms.dmpcdn.com/food/2024/10/16/27e08230-8b64-11ef-9f9b-5b86d138e632_webp_original.webp',
@@ -67,6 +74,7 @@
       'https://cms.dmpcdn.com/travel/2019/12/17/32844d20-20a7-11ea-a282-13af15ea56d3_original.jpg',
       'https://cms.dmpcdn.com/food/2022/12/19/12360cf0-7f65-11ed-bbfe-43b8dd25f2cd_webp_original.jpg'
     ];
+
     let restaurants = [
       {name:'ร้านบ้านสวนออร์แกนิก',discount:10,greenScore:92,rating:4.7,province:'ชลบุรี',district:'ศรีราชา',type:'buffet',price:450},
       {name:'ส้มตำแม่บุญช่วย',discount:15,greenScore:75,rating:4.3,province:'ขอนแก่น',district:'เมืองขอนแก่น',type:'asian',price:129},
@@ -74,29 +82,125 @@
       {name:'ก๋วยเตี๋ยวเรือนายโอ',discount:5,greenScore:55,rating:4.2,province:'นครราชสีมา',district:'ปากช่อง',type:'asian',price:89},
       {name:'La Pizzeria Italiano',discount:25,greenScore:80,rating:4.6,province:'เชียงใหม่',district:'เมืองเชียงใหม่',type:'western',price:550},
       {name:'Buffet ซีฟู้ดเดลิเวอรี่',discount:30,greenScore:95,rating:4.9,province:'ภูเก็ต',district:'ราไวย์',type:'buffet',price:799},
-      {name:'ร้านข้าวแกงปักษ์ใต้',discount:12,greenScore:65,rating:4.1,province:'นครศรีธรรมราช',district:'เมืองนครศรีธรรมราช',type:'asian',price:159},
+      {name:'ร้านข้าวแกงปักษ์ใต้',discount:12,greenScore:65,rating:4.1,province:'นครศรีธรรมราช',district:'เมืองนครศรีธรรมราษฎร์',type:'asian',price:159},
       {name:'Sushi Master',discount:18,greenScore:85,rating:4.5,province:'กรุงเทพฯ',district:'บางรัก',type:'asian',price:899},
       {name:'Curry & Rice',discount:22,greenScore:70,rating:4.4,province:'สุพรรณบุรี',district:'อู่ทอง',type:'asian',price:199},
       {name:'Burger Town',discount:8,greenScore:50,rating:4.0,province:'ชุมพร',district:'เมืองชุมพร',type:'western',price:299}
     ];
-    restaurants.forEach(r => r.image = imageUrls[Math.floor(Math.random() * imageUrls.length)]);
-    const topCount = Math.ceil(restaurants.length * 0.2);
+
+    // Assign random image
+    restaurants.forEach(r => r.image = imageUrls[Math.floor(Math.random()*imageUrls.length)]);
+
+    // Bring top 20% green-score to front, randomized
+    const topCount = Math.ceil(restaurants.length*0.2);
     const top20 = [...restaurants].sort((a,b)=>b.greenScore-a.greenScore).slice(0, topCount);
     shuffle(top20);
     restaurants = [...top20, ...restaurants.filter(r=>!top20.includes(r))];
-    const listEl = document.getElementById('restaurants-list');
+
+    // Element refs
+    const listEl         = document.getElementById('restaurants-list');
+    const searchInput    = document.getElementById('search-input');
+    const filterProvince = document.getElementById('filter-province');
+    const filterDistrict = document.getElementById('filter-district');
+    const filterType     = document.getElementById('filter-type');
+    const filterPrice    = document.getElementById('filter-price');
+    const sortOrder      = document.getElementById('sort-order');
+
+    // Populate province dropdown
+    const provinces = [...new Set(restaurants.map(r=>r.province))].sort();
+    provinces.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = opt.text = p;
+      filterProvince.add(opt);
+    });
+
+    // When province changes, populate districts
+    filterProvince.addEventListener('change', () => {
+      const prov = filterProvince.value;
+      filterDistrict.innerHTML = `<option value="">อำเภอ/เขต</option>`;
+      filterDistrict.disabled = !prov;
+      if (prov) {
+        const districts = [...new Set(
+          restaurants.filter(r=>r.province===prov).map(r=>r.district)
+        )].sort();
+        districts.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = opt.text = d;
+          filterDistrict.add(opt);
+        });
+      }
+      applyFilters();
+    });
+
+    // Core filter+sort
+    function applyFilters() {
+      let data = restaurants.filter(r => {
+        // search
+        if (searchInput.value && !r.name.includes(searchInput.value)) return false;
+        // province/district
+        if (filterProvince.value && r.province !== filterProvince.value) return false;
+        if (filterDistrict.value && r.district !== filterDistrict.value) return false;
+        // type
+        if (filterType.value && r.type !== filterType.value) return false;
+        // price range
+        if (filterPrice.value) {
+          const [min,max] = filterPrice.value.split('-');
+          if (min && r.price < +min) return false;
+          if (max && max !== '' && r.price > +max) return false;
+        }
+        return true;
+      });
+
+      // sort
+      const order = sortOrder.value;
+      if (order) {
+        const [key, dir] = order.split('_');
+        data.sort((a,b) => dir === 'desc' ? b[key] - a[key] : a[key] - b[key]);
+      }
+
+      renderRestaurants(data);
+    }
+
+    // Hook up controls
+    [searchInput, filterDistrict, filterType, filterPrice, sortOrder]
+      .forEach(el => el.addEventListener('input', applyFilters));
+
+    // initial render
+    renderRestaurants(restaurants);
+
+    // rendering function (unchanged)
     function renderRestaurants(data) {
       listEl.innerHTML = '';
       data.forEach(r => {
-        const slug = 'detail_' + r.name.replace(/\s+/g, '').replace(/[^ก-ฮA-Za-z0-9]/g, '').toLowerCase();
-        const link = document.createElement('a'); link.href = `${slug}.html`; link.className = 'block';
-        const card = document.createElement('div'); card.className = 'restaurant-card';
-        card.innerHTML = `<div class="card-image"><img src="${r.image}" alt="${r.name}"><div class="badge-discount">-${r.discount}%</div></div><div class="restaurant-info"><div class="restaurant-name">${r.name}</div><div><span class="rating">${r.rating}★</span><span class="meta">฿${r.price}</span></div><div class="location">${r.district}, ${r.province}</div><div class="green-score-container"><div class="green-score-label">Green Score: ${r.greenScore}</div><div class="green-score-bar"><div class="green-score-fill" style="width:${r.greenScore}%;"></div></div></div></div>`;
+        const slug = 'detail_' + r.name.replace(/\s+/g,'').replace(/[^ก-ฮA-Za-z0-9]/g,'').toLowerCase();
+        const link = document.createElement('a');
+        link.href = `${slug}.html`;
+        link.className = 'block';
+        const card = document.createElement('div');
+        card.className = 'restaurant-card';
+        card.innerHTML = `
+          <div class="card-image">
+            <img src="${r.image}" alt="${r.name}">
+            <div class="badge-discount">-${r.discount}%</div>
+          </div>
+          <div class="restaurant-info">
+            <div class="restaurant-name">${r.name}</div>
+            <div>
+              <span class="rating">${r.rating}★</span>
+              <span class="meta">฿${r.price}</span>
+            </div>
+            <div class="location">${r.district}, ${r.province}</div>
+            <div class="green-score-container">
+              <div class="green-score-label">Green Score: ${r.greenScore}</div>
+              <div class="green-score-bar">
+                <div class="green-score-fill" style="width: ${r.greenScore}%;"></div>
+              </div>
+            </div>
+          </div>`;
         link.appendChild(card);
         listEl.appendChild(link);
       });
     }
-    renderRestaurants(restaurants);
   </script>
 </body>
 </html>
