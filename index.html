@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCG Discount</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap');
+    :root { --primary-color: #2E7D32; --secondary-color: #E8F5E9; --text-color: #333; --light-text: #555; --card-radius: 8px; --shadow: rgba(0,0,0,0.1); --header-height: 56px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans Thai', sans-serif; background: var(--secondary-color); color: var(--text-color); }
+    a { text-decoration: none; color: inherit; }
+    header { position: sticky; top: 0; background: var(--primary-color); color: #fff; height: var(--header-height);
+      display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500;
+      box-shadow: 0 2px 4px var(--shadow); z-index: 200; }
+    .filter-controls { position: sticky; top: var(--header-height); background: #fff; padding: 8px;
+      display: flex; gap: 6px; align-items: center; overflow-x: auto; box-shadow: 0 2px 4px var(--shadow); z-index: 100; }
+    .filter-controls select, .filter-controls input[type="search"], .filter-controls button {
+      flex: 0 0 auto; padding: 6px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 20px; background: #fff; }
+    .filter-controls button { background: #E53935; color: #fff; cursor: pointer; }
+    .filter-controls button:hover { background: #D32F2F; }
+    .filter-controls input[type="search"] { width: 150px; }
+    #restaurants-list { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 8px; }
+    @media (min-width: 1024px) { #restaurants-list { grid-template-columns: repeat(2, 1fr); } }
+    .restaurant-card { background: #fff; border-radius: var(--card-radius); overflow: hidden;
+      box-shadow: 0 2px 8px var(--shadow); transition: transform .2s, box-shadow .2s; }
+    .restaurant-card:hover { transform: translateY(-4px); }
+    .card-image { position: relative; }
+    .card-image img { width: 100%; height: 300px; object-fit: cover; }
+    .badge-discount { position: absolute; top: 10px; left: 10px; background: #E53935; color: #fff;
+      padding: 6px 10px; font-size: 14px; font-weight: bold; border-radius: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    .restaurant-info { padding: 12px; }
+    .restaurant-name { font-size: 15px; font-weight: 500; margin-bottom: 6px; line-height: 1.2; }
+    .rating { display: inline-block; background: #FFB400; color: #fff; padding: 2px 6px; font-size: 12px; border-radius: 4px; margin-right: 6px; }
+    .meta { font-size: 13px; color: var(--light-text); margin: 4px 0; display: inline-block; }
+    .location { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--light-text); }
+    .location::before { content: '📍'; }
+    .green-score-container { margin: 8px 0 0; }
+    .green-score-label { font-size: 12px; color: var(--light-text); margin-bottom: 4px; }
+    .green-score-bar { width: 100%; background: #ddd; border-radius: 4px; overflow: hidden; height: 8px; }
+    .green-score-fill { height: 8px; background: var(--primary-color); }
+    .highlight { box-shadow: 0 0 12px red; }
+    #selected-name { margin-left: 12px; font-size: 14px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>SCG Discount</header>
+  <div class="filter-controls">
+    <input type="search" id="search-input" placeholder="ค้นหาร้าน...">
+    <select id="filter-province"><option value="">จังหวัด</option></select>
+    <select id="filter-district" disabled><option value="">อำเภอ/เขต</option></select>
+    <select id="filter-type"><option value="">ประเภทอาหาร</option><option value="buffet">บุฟเฟ่ต์</option><option value="asian">เอเชีย</option><option value="western">ตะวันตก</option><option value="a-la-carte">จานเดี่ยว</option></select>
+    <select id="filter-price"><option value="">ราคา (฿)</option><option value="0-200">0 – 200</option><option value="201-500">201 – 500</option><option value="501-800">501 – 800</option><option value="801-1000">801 – 1000</option><option value="1001-">1001+</option></select>
+    <select id="sort-order"><option value="">จัดเรียง</option><option value="price_desc">ราคา สูง-ต่ำ</option><option value="rating_desc">คะแนน สูง-ต่ำ</option><option value="discount_desc">ส่วนลด สูง-ต่ำ</option></select>
+    <button id="random-btn">สุ่มร้านอาหาร</button>
+    <span id="selected-name"></span>
+  </div>
+  <div id="restaurants-list"></div>
+  <script>
+    function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }}
+    const imageUrls = [
+      'https://cms.dmpcdn.com/food/2025/05/21/b3c2c1e0-360f-11f0-91ec-f3447caf4298_webp_original.webp',
+      'https://cms.dmpcdn.com/food/2024/10/16/27e08230-8b64-11ef-9f9b-5b86d138e632_webp_original.webp',
+      'https://cms.dmpcdn.com/food/2021/11/25/3a028820-4dd5-11ec-a145-bf9638c8f0a2_webp_original.jpg',
+      'https://cms.dmpcdn.com/travel/2019/12/17/32844d20-20a7-11ea-a282-13af15ea56d3_original.jpg',
+      'https://cms.dmpcdn.com/food/2022/12/19/12360cf0-7f65-11ed-bbfe-43b8dd25f2cd_webp_original.jpg'
+    ];
+    let restaurants = [
+      {name:'ร้านบ้านสวนออร์แกนิก',discount:10,greenScore:92,rating:4.7,province:'ชลบุรี',district:'ศรีราชา',type:'buffet',price:450},
+      {name:'ส้มตำแม่บุญช่วย',discount:15,greenScore:75,rating:4.3,province:'ขอนแก่น',district:'เมืองขอนแก่น',type:'asian',price:129},
+      {name:'SteakHouse Prime',discount:20,greenScore:60,rating:4.8,province:'กรุงเทพฯ',district:'วัฒนา',type:'western',price:1299},
+      {name:'ก๋วยเตี๋ยวเรือนายโอ',discount:5,greenScore:55,rating:4.2,province:'นครราชสีมา',district:'ปากช่อง',type:'asian',price:89},
+      {name:'La Pizzeria Italiano',discount:25,greenScore:80,rating:4.6,province:'เชียงใหม่',district:'เมืองเชียงใหม่',type:'western',price:550},
+      {name:'Buffet ซีฟู้ดเดลิเวอรี่',discount:30,greenScore:95,rating:4.9,province:'ภูเก็ต',district:'ราไวย์',type:'buffet',price:799},
+      {name:'ร้านข้าวแกงปักษ์ใต้',discount:12,greenScore:65,rating:4.1,province:'นครศรีธรรมราช',district:'เมืองนครศรีธรรมราช',type:'asian',price:159},
+      {name:'Sushi Master',discount:18,greenScore:85,rating:4.5,province:'กรุงเทพฯ',district:'บางรัก',type:'asian',price:899},
+      {name:'Curry & Rice',discount:22,greenScore:70,rating:4.4,province:'สุพรรณบุรี',district:'อู่ทอง',type:'asian',price:199},
+      {name:'Burger Town',discount:8,greenScore:50,rating:4.0,province:'ชุมพร',district:'เมืองชุมพร',type:'western',price:299}
+    ];
+    restaurants.forEach(r => r.image = imageUrls[Math.floor(Math.random() * imageUrls.length)]);
+    const topCount = Math.ceil(restaurants.length * 0.2);
+    const top20 = [...restaurants].sort((a,b)=>b.greenScore-a.greenScore).slice(0, topCount);
+    shuffle(top20);
+    restaurants = [...top20, ...restaurants.filter(r=>!top20.includes(r))];
+    const listEl = document.getElementById('restaurants-list');
+    function renderRestaurants(data) {
+      listEl.innerHTML = '';
+      data.forEach(r => {
+        const slug = 'detail_' + r.name.replace(/\s+/g, '').replace(/[^ก-ฮA-Za-z0-9]/g, '').toLowerCase();
+        const link = document.createElement('a'); link.href = `${slug}.html`; link.className = 'block';
+        const card = document.createElement('div'); card.className = 'restaurant-card';
+        card.innerHTML = `<div class="card-image"><img src="${r.image}" alt="${r.name}"><div class="badge-discount">-${r.discount}%</div></div><div class="restaurant-info"><div class="restaurant-name">${r.name}</div><div><span class="rating">${r.rating}★</span><span class="meta">฿${r.price}</span></div><div class="location">${r.district}, ${r.province}</div><div class="green-score-container"><div class="green-score-label">Green Score: ${r.greenScore}</div><div class="green-score-bar"><div class="green-score-fill" style="width:${r.greenScore}%;"></div></div></div></div>`;
+        link.appendChild(card);
+        listEl.appendChild(link);
+      });
+    }
+    renderRestaurants(restaurants);
+  </script>
+</body>
+</html>
