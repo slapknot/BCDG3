@@ -7,14 +7,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sarabun">
+<body class="bg-gray-50 font-sarabun relative">
   <!-- Header -->
   <nav class="bg-white shadow p-4">
     <a href="index.html" class="text-green-700 font-bold text-xl">← กลับสู่หน้าแรก</a>
   </nav>
 
   <main class="container mx-auto p-6 space-y-8">
-    <!-- ร้านและโค้ดส่วนลด -->
+    <!-- 1. ร้านและโค้ดส่วนลด -->
     <section>
       <div class="flex items-center space-x-4">
         <h1 class="text-3xl font-bold text-green-800">บ้านสวนออร์แกนิก</h1>
@@ -23,80 +23,81 @@
       <p class="text-gray-700 mt-2">ร้านอาหารสไตล์ไทยออร์แกนิก บรรยากาศสวนร่มรื่น โฟกัสเมนูสุขภาพ โดยวัตถุดิบปลอดสารพิษและออร์แกนิก</p>
     </section>
 
-    <!-- ภาพร้านพร้อมส่วนลด -->
+    <!-- 2. ภาพร้านพร้อมส่วนลด -->
     <div class="relative">
       <img src="https://cms.dmpcdn.com/food/2025/05/21/b3c2c1e0-360f-11f0-91ec-f3447caf4298_webp_original.webp" alt="ภาพหน้าร้าน" class="w-full h-64 object-cover rounded-lg mb-4">
       <span class="absolute top-4 right-4 bg-red-600 text-white font-bold px-3 py-1 rounded-lg">ลดทันที 15%</span>
     </div>
 
-    <!-- เมนูแนะนำ -->
+    <!-- 3. เมนูแนะนำ -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-4">เมนูแนะนำ</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div class="bg-white rounded-lg overflow-hidden shadow">
           <img src="http://www.gourmetandcuisine.com/Images/editor_upload/_editor1505987614_original.jpg" alt="สลัดสมุนไพรสด Organic Herb Salad" class="w-full h-40 object-cover">
           <div class="p-4">
-            <h3 class="text-lg font-medium text-gray-800">สลัดสมุนไพรสด</h3>
+            <h3 class="text-lg font-medium text-gray-800">สลัดสมุนไพรสด Organic Herb Salad</h3>
             <p class="text-gray-600 mt-1">120 บาท</p>
           </div>
         </div>
         <div class="bg-white rounded-lg overflow-hidden shadow">
-          <img src="https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2022/09/16/a0d98284196742799b7f3094b92feaba_How_To_Make_Thai_Green_Curry_Like_A_MICHELIN_Starred_Restaurant3.jpg" alt="แกงเขียวหวานผักรวม" class="w-full h-40 object-cover">
+          <img src="https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2022/09/16/a0d98284196742799b7f3094b92feaba_How_To_Make_Thai_Green_Curry_Like_A_MICHELIN_Starred_Restaurant3.jpg" alt="แกงเขียวหวานผักรวม Green Curry Vegetable" class="w-full h-40 object-cover">
           <div class="p-4">
-            <h3 class="text-lg font-medium text-gray-800">แกงเขียวหวานผักรวม</h3>
+            <h3 class="text-lg font-medium text-gray-800">แกงเขียวหวานผักรวม Green Curry Vegetable</h3>
             <p class="text-gray-600 mt-1">140 บาท</p>
           </div>
         </div>
         <div class="bg-white rounded-lg overflow-hidden shadow">
-          <img src="https://clean-2lean.com/wp-content/uploads/2020/09/%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA-004-%E0%B8%81%E0%B8%B0%E0%B9%80%E0%B8%9E%E0%B8%A3%E0%B8%B2%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%B2%E0%B8%AB%E0%B8%B9%E0%B9%89%E0%B8%AD%E0%B8%81%E0%B9%84%E0%B8%81%E0%B9%88.jpg" alt="ข้าวกล้องผัดกะเพราเต้าหู้" class="w-full h-40 object-cover">
+          <img src="https://clean-2lean.com/wp-content/uploads/2020/09/%E0%B8%A3%E0%B8%AB%E0%B8%B1%E0%B8%AA-004-%E0%B8%81%E0%B8%B0%E0%B9%80%E0%B8%9E%E0%B8%A3%E0%B8%B2%E0%B9%80%E0%B8%95%E0%B9%89%E0%B8%B2%E0%B8%AB%E0%B8%B9%E0%B9%89%E0%B8%AD%E0%B8%81%E0%B9%84%E0%B8%81%E0%B9%88.jpg" alt="ข้าวกล้องผัดกะเพราเต้าหู้ Stir-fried Brown Rice with Tofu" class="w-full h-40 object-cover">
           <div class="p-4">
-            <h3 class="text-lg font-medium text-gray-800">ข้าวกล้องผัดกะเพราเต้าหู้</h3>
+            <h3 class="text-lg font-medium text-gray-800">ข้าวกล้องผัดกะเพราเต้าหู้ Stir-fried Brown Rice with Tofu</h3>
             <p class="text-gray-600 mt-1">150 บาท</p>
           </div>
         </div>
         <div class="bg-white rounded-lg overflow-hidden shadow">
-          <img src="https://img.kapook.com/u/2021/wanwanat/754798162_1.jpg" alt="น้ำสมูทตี้ผักผลไม้รวม" class="w-full h-40 object-cover">
+          <img src="https://img.kapook.com/u/2021/wanwanat/754798162_1.jpg" alt="น้ำสมูทตี้ผักผลไม้รวม Organic Smoothie" class="w-full h-40 object-cover">
           <div class="p-4">
-            <h3 class="text-lg font-medium text-gray-800">น้ำสมูทตี้ผักผลไม้รวม</h3>
+            <h3 class="text-lg font-medium text-gray-800">น้ำสมูทตี้ผักผลไม้รวม Organic Smoothie</h3>
             <p class="text-gray-600 mt-1">90 บาท</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- รีวิวลูกค้า -->
+    <!-- 4. คะแนนรีวิว -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-4">คะแนนรีวิว</h2>
       <div class="flex items-center space-x-1 text-yellow-500 mb-4">
-        ★★★★☆ <span class="text-gray-600 ml-2">4.0 / 5.0</span>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span class="text-gray-400">★</span>
+        <span class="text-gray-600 ml-2">4.0 / 5.0</span>
       </div>
       <div class="space-y-4">
         <div class="bg-white p-4 rounded-lg shadow">
-          <p class="text-gray-800 font-medium">“บรรยากาศดี อาหารสด สะอาด”</p>
+          <p class="text-gray-800 font-medium">“บรรยากาศดีมาก อาหารสดใหม่ รสชาติเยี่ยม!”</p>
           <p class="text-gray-600 text-sm mt-1">— คุณสมชาย, 5 มิ.ย. 2025</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow">
-          <p class="text-gray-800 font-medium">“บริการเป็นกันเอง ชอบมาก”</p>
+          <p class="text-gray-800 font-medium">“เมนูหลากหลาย มีตัวเลือกเพื่อสุขภาพเยอะ ชอบมากครับ”</p>
           <p class="text-gray-600 text-sm mt-1">— คุณอรทัย, 12 พ.ค. 2025</p>
         </div>
       </div>
     </section>
 
-    <!-- แผนที่ -->
+    <!-- 5. แผนที่ -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">แผนที่</h2>
       <div class="w-full mb-4">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.123456789012!2d100.123456!3d13.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d1234567890ab%3A0xabcdef1234567890!2z4Liq4Li0IOC4geC4suC4keC4meC5geC5gOC4quC4suC5jCDguJfguYjguKPguLLguYjguJfguKLguLLguJnguKfguKt4LiiIOC4oeC4o-C4iOC4suC4o-C4o-C5jCDguJPguKPguKPguLLguJnguKPguiDguLLguI3guYzguKrguKPguJXguKrguLLguYnguKfguKt4LiV4Li54LiiIOCurmdo4Lij4LmJ4Lix4Lii4Lih4Lir4LiZIOC5jOC5iuC5ieC5jOC4od4LiZ!5e0!3m2!1sth!2sth!4v1651234567890" class="w-full h-48 rounded-lg" style="border:0;" allowfullscreen loading="lazy"></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3875.123456789012!2d100.123456!3d13.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d1234567890ab%3A0xabcdef1234567890!2z4Liq4Li0IOC4geC4suC4keC4meC5geC5gOC4quC4suC5jCDguJfguYjguKPguLLguYjguJfguKLguLLguJnguKfguKt4LiV4Li54LiiIOCurmdo4Lij4LmJ4Lix4Lii4Lih4Lir4LiZIOC5jOC5iuC5ieC5jOC4od4LiZ!5e0!3m2!1sth!2sth!4v1651234567890" class="w-full h-48 rounded-lg" style="border:0;" allowfullscreen loading="lazy"></iframe>
       </div>
     </section>
 
-    <!-- ที่อยู่ -->
+    <!-- 6. ที่อยู่ร้าน -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">ที่อยู่ร้าน</h2>
-      <p class="text-gray-700">123 ซ. สุขใจ 5, ต.บางรัก, อ.บางรัก, กรุงเทพฯ 10500</p>
+      <p class="text-gray-700">123 ซ. สุขใจ 5, บางรัก, กรุงเทพฯ 10500</p>
     </section>
 
-    <!-- Green Score -->
+    <!-- 7. Green Score -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">Green Score</h2>
       <ul class="list-none space-y-1 mb-2">
@@ -109,35 +110,35 @@
       <p class="font-medium text-green-600">คะแนนรวม: 80/100</p>
     </section>
 
-    <!-- สิ่งอำนวยความสะดวก -->
+    <!-- 8. สิ่งอำนวยความสะดวก -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">สิ่งอำนวยความสะดวก</h2>
-      <ul class="list-disc pl-5 text-gray-700">
+      <ul class="list-disc pl-5 space-y-1 text-gray-700">
         <li>Free Wi-Fi</li>
         <li>ที่จอดรถในพื้นที่</li>
         <li>พื้นที่ Outdoor & Indoor</li>
       </ul>
     </section>
 
-    <!-- ประเภทอาหาร -->
+    <!-- 9. ประเภทอาหาร -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">ประเภทอาหาร</h2>
       <p class="text-gray-700">ไทย, มังสวิรัติ, ออร์แกนิก</p>
     </section>
 
-    <!-- บรรยากาศ -->
+    <!-- 10. บรรยากาศ -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">บรรยากาศ</h2>
       <p class="text-gray-700">เหมาะสำหรับครอบครัวและเด็ก พร้อมมุมถ่ายรูปกลางสวน</p>
     </section>
 
-    <!-- ช่องทางการชำระเงิน -->
+    <!-- 11. ช่องทางการชำระเงิน -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">ช่องทางการชำระเงิน</h2>
       <p class="text-gray-700">เงินสด, บัตรเครดิต, Mobile Banking, PromptPay</p>
     </section>
 
-    <!-- ติดต่อ & Social Media -->
+    <!-- 12. ติดต่อ & Social Media -->
     <section>
       <h2 class="text-2xl font-semibold text-green-700 mb-2">ติดต่อเรา</h2>
       <p class="text-gray-700 mb-2">เบอร์ติดต่อ: <a href="tel:+66123456789" class="text-green-600 hover:underline">(+66) 12-345-6789</a></p>
@@ -148,7 +149,7 @@
       </div>
     </section>
 
-    <!-- เขียนรีวิว -->
+    <!-- 13. เขียนรีวิว -->
     <section class="mt-8">
       <h2 class="text-2xl font-semibold text-green-700 mb-2">เขียนรีวิว</h2>
       <div id="star-rating" class="flex space-x-1 text-2xl mb-4">
@@ -163,22 +164,69 @@
     </section>
   </main>
 
+  <!-- Modal for discount with calculation and close icons -->
+  <div id="discount-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="relative bg-white rounded-lg p-6 shadow-lg w-80 text-center">
+      <!-- Close icon -->
+      <button id="modal-close-x" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl">×</button>
+      <h3 id="modal-title" class="text-xl font-semibold text-green-800 mb-4">กรุณากรอกราคามื้อนี้</h3>
+      <input id="expense-input" type="number" min="0" placeholder="ยอดค่าอาหาร (บาท)" class="w-full border rounded p-2 mb-4">
+      <button id="confirm-expense-btn" class="bg-blue-600 text-white px-4 py-2 rounded mb-4">ยืนยันยอด</button>
+      <div id="code-section" class="hidden">
+        <p class="text-gray-700 mb-2">ราคาเต็ม: <span id="full-price" class="font-medium"></span> บาท</p>
+        <p class="text-gray-700 mb-2">ส่วนลด (<span id="discount-percent" class="font-medium"></span>%): <span id="discount-amount" class="font-medium"></span> บาท</p>
+        <h3 class="text-lg font-semibold text-green-800 mb-2">โค้ดส่วนลดของคุณ</h3>
+        <p class="text-3xl font-bold text-red-600 mb-4">DISCOUNTSCG</p>
+        <p class="text-gray-600 mb-4">หมดอายุ: <span id="expiry-date" class="font-medium"></span></p>
+        <button id="close-modal" class="bg-green-600 text-white px-4 py-2 rounded">ปิด</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // โค้ดส่วนลด
-    document.getElementById('discount-btn').addEventListener('click', function() {
-      this.textContent = 'DISCOUNTSCG'; this.disabled = true; this.classList.replace('bg-red-600','bg-gray-400');
+    const discountBtn = document.getElementById('discount-btn');
+    const modal = document.getElementById('discount-modal');
+    const confirmBtn = document.getElementById('confirm-expense-btn');
+    const expenseInput = document.getElementById('expense-input');
+    const codeSection = document.getElementById('code-section');
+    const modalTitle = document.getElementById('modal-title');
+    const closeBtn = document.getElementById('close-modal');
+    const closeX = document.getElementById('modal-close-x');
+    const fullPriceEl = document.getElementById('full-price');
+    const discountAmountEl = document.getElementById('discount-amount');
+    const discountPercentEl = document.getElementById('discount-percent');
+    const expiryDateEl = document.getElementById('expiry-date');
+    const DISCOUNT_PERCENT = 15;
+    discountPercentEl.textContent = DISCOUNT_PERCENT;
+    discountBtn.addEventListener('click', () => {
+      expenseInput.value = '';
+      codeSection.classList.add('hidden');
+      confirmBtn.classList.remove('hidden');
+      expenseInput.classList.remove('hidden');
+      modalTitle.textContent = 'กรุณากรอกราคามื้อนี้';
+      modal.classList.remove('hidden');
     });
-    // คะแนนดาว
+    confirmBtn.addEventListener('click', () => {
+      const amount = parseFloat(expenseInput.value) || 0;
+      const discountAmt = Math.round(amount * DISCOUNT_PERCENT / 100);
+      fullPriceEl.textContent = amount.toLocaleString();
+      discountAmountEl.textContent = discountAmt.toLocaleString();
+      const now = new Date();
+      const expiry = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+      expiryDateEl.textContent = expiry.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      expenseInput.classList.add('hidden');
+      confirmBtn.classList.add('hidden');
+      codeSection.classList.remove('hidden');
+    });
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden')); closeX.addEventListener('click', () => modal.classList.add('hidden'));
     const stars = document.querySelectorAll('#star-rating span'); let selectedRating = 0;
     stars.forEach(star => star.addEventListener('click', () => {
-      selectedRating = star.getAttribute('data-value');
-      stars.forEach(s => s.classList.toggle('text-yellow-500', s.getAttribute('data-value') <= selectedRating));
+      selectedRating = star.getAttribute('data-value'); stars.forEach(s => s.classList.toggle('text-yellow-500', s.getAttribute('data-value') <= selectedRating));
     }));
-    // ส่งรีวิว
-    document.getElementById('submit-review').addEventListener('click', ()=>{
-      const comment = document.getElementById('comment-input').value;
-      alert(`ขอบคุณสำหรับรีวิว! คะแนน: ${selectedRating} ดาว\nความคิดเห็น: ${comment}`);
+    document.getElementById('submit-review').addEventListener('click', () => {
+      const comment = document.getElementById('comment-input').value; alert(`ขอบคุณสำหรับรีวิว! คะแนน: ${selectedRating} ดาว\nความคิดเห็น: ${comment}`);
     });
   </script>
 </body>
 </html>
+
